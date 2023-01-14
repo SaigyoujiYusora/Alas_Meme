@@ -21,8 +21,8 @@ namespace Alas_Meme
             }
             catch (System.IndexOutOfRangeException)
             {
-                markdown = File.ReadAllText("../../../Alas_Meme_N_Debug.md");
-                // markdown = File.ReadAllText("../../../Alas_Meme_N.md");
+                // markdown = File.ReadAllText("../../../Alas_Meme_N_Debug.md");
+                markdown = File.ReadAllText("../../../Alas_Meme_N.md");
             }
 
             //Initialize the MarkdownDeep engine
