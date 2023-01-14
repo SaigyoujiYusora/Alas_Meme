@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ﻿# The following command works for downloading when using Git for Windows:
+=======
+# The following command works for downloading when using Git for Windows:
+>>>>>>> origin/master
 # curl -LOf http://gist.githubusercontent.com/kmorcinek/2710267/raw/.gitignore
 #
 # Download this file using PowerShell v3 under Windows with the following comand:
@@ -223,4 +227,8 @@ AppPackages/
 
 #####
 # End of core ignore list, below put you custom 'per project' settings (patterns or path)
+<<<<<<< HEAD
 #####
+=======
+#####
+>>>>>>> origin/master
