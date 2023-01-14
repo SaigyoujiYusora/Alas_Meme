@@ -1,10 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Drawing;
 using System.Drawing.Imaging;
-using MarkdownDeep;
-using System.Windows.Forms;
+using System.IO;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using MarkdownDeep;
 
 namespace Alas_Meme
 {
@@ -14,12 +14,12 @@ namespace Alas_Meme
         public static void Main(string[] args)
         {
             //Read the markdown file
-            string markdown = null;
+            string markdown;
             try
             {
                 markdown = File.ReadAllText(args[0]);
             }
-            catch (System.IndexOutOfRangeException)
+            catch (IndexOutOfRangeException)
             {
                 // markdown = File.ReadAllText("../../../Alas_Meme_N_Debug.md");
                 markdown = File.ReadAllText("../../../Alas_Meme_N.md");
@@ -39,7 +39,7 @@ namespace Alas_Meme
             {
                 File.WriteAllText("../../../temp/output.html", html);
             }
-            catch (System.IO.DirectoryNotFoundException)
+            catch (DirectoryNotFoundException)
             {
                 Directory.CreateDirectory("../../../temp");
                 File.WriteAllText("../../../temp/output.html", html);
@@ -53,10 +53,8 @@ namespace Alas_Meme
             browser.ScrollBarsEnabled = false;
             browser.AllowNavigation = false;
             browser.DocumentText = html;
-            // browser.Width = 800;
-            // browser.Height = 2000;
             
-            browser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(WebBrowser_DocumentCompleted);
+            browser.DocumentCompleted += WebBrowser_DocumentCompleted;
             Application.Run();
         }
 
@@ -67,9 +65,9 @@ namespace Alas_Meme
             //scale browser to 200%
             browser.Document.Body.Style = "zoom: 300%;";
             browser.Width = browser.Document.Body.ScrollRectangle.Width;
-            browser.Width = browser.Width * 3;
+            browser.Width *= 3;
             browser.Height = browser.Document.Body.ScrollRectangle.Height;
-            browser.Height = browser.Height * 3;
+            browser.Height *= 3;
             if (browser.Width < 920)
             {
                 browser.Width = 920;
