@@ -8,7 +8,7 @@ using MarkdownDeep;
 
 namespace Alas_Meme
 {
-    internal class Program
+    internal class MDtoPng
     {
         [STAThread]
         public static void Main(string[] args)
@@ -82,6 +82,20 @@ namespace Alas_Meme
                 //del output.html
                 File.Delete("../../../temp/output.html");
                 
+                //get running path
+                string runPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                
+                //set runPath to ../../../temp/
+                for (int i = 0; i <= 3; i++)
+                {
+                    runPath = runPath.Substring(0, runPath.LastIndexOf('\\'));
+                }
+                runPath += "\\temp\\";
+                
+                
+                //open temp folder in explorer
+                System.Diagnostics.Process.Start("explorer.exe", runPath);
+
                 Application.Exit();
             }
         }
