@@ -91,6 +91,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="ConvertorJPGtoPNG.cs" />
         <Compile Include="MDtoPNG.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>

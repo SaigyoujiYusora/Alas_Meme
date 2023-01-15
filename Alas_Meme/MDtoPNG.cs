@@ -15,6 +15,9 @@ namespace Alas_Meme
         {
             //Read the markdown file
             string markdown;
+            {
+                markdown = File.ReadAllText("../../../Alas_Meme_N_Fun.md");
+            }
             try
             {
                 markdown = File.ReadAllText(args[0]);
@@ -22,7 +25,8 @@ namespace Alas_Meme
             catch (IndexOutOfRangeException)
             {
                 // markdown = File.ReadAllText("../../../Alas_Meme_N_Debug.md");
-                markdown = File.ReadAllText("../../../Alas_Meme_N.md");
+                markdown = File.ReadAllText("../../../Alas_Meme_N_Fun.md");
+                // markdown = File.ReadAllText("../../../Alas_Meme_N.md");
             }
 
             //Initialize the MarkdownDeep engine
@@ -54,7 +58,12 @@ namespace Alas_Meme
             browser.AllowNavigation = false;
             browser.DocumentText = html;
             
+            
             browser.DocumentCompleted += WebBrowser_DocumentCompleted;
+            // browser.DocumentCompleted += (sender, e) => 
+            // {
+            //     
+            // };
             Application.Run();
         }
 
@@ -62,7 +71,7 @@ namespace Alas_Meme
         {
             var browser = sender as WebBrowser;
             
-            //scale browser to 200%
+            // scale browser to 200%
             browser.Document.Body.Style = "zoom: 300%;";
             browser.Width = browser.Document.Body.ScrollRectangle.Width;
             browser.Width *= 3;
@@ -75,12 +84,17 @@ namespace Alas_Meme
             
             using (Bitmap bitmap = new Bitmap(browser.Width, browser.Height))
             {
+                //sleep 10seconds
+                Console.WriteLine("Sleep 10s");
+                System.Threading.Thread.Sleep(5000);
+                
+                
                 browser.DrawToBitmap(bitmap, new Rectangle(0, 0, browser.Width, browser.Height));
                 bitmap.Save("../../../temp/output.png", ImageFormat.Png);
                 Console.WriteLine("HTML convert to image successfully!");
                 
                 //del output.html
-                File.Delete("../../../temp/output.html");
+                // File.Delete("../../../temp/output.html");
                 
                 //get running path
                 string runPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
@@ -91,8 +105,7 @@ namespace Alas_Meme
                     runPath = runPath.Substring(0, runPath.LastIndexOf('\\'));
                 }
                 runPath += "\\temp\\";
-                
-                
+
                 //open temp folder in explorer
                 System.Diagnostics.Process.Start("explorer.exe", runPath);
 
