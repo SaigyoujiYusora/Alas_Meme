@@ -94,6 +94,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="FileSearch.cs" />
         <Compile Include="ImageConverter.cs" />
         <Compile Include="MDtoPNG.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />

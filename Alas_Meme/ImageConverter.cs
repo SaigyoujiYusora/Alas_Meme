@@ -1,11 +1,8 @@
 ﻿using System;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats;
-using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 using System.IO;
 using System.Linq;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace Alas_Meme
 {
@@ -13,6 +10,7 @@ namespace Alas_Meme
     {
         public static void ConvertImages(string path)
         {
+            Console.WriteLine("Staring image conversion");
             // 获取该文件夹下所有图片文件
             var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
                 .Where(s => s.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
@@ -39,12 +37,14 @@ namespace Alas_Meme
                 {
                     try
                     {
-                        using (Image image = SixLabors.ImageSharp.Image.Load(file))
+                        using (Image image = Image.Load(file))
                         {
                             image.Save(Path.ChangeExtension(file, "png"), new PngEncoder());
                         }
+
+                        Console.WriteLine("Image converted finished");
                     }
-                    catch (System.Exception e)
+                    catch (Exception e)
                     {
                         Console.WriteLine("Error converting image: " + e.Message);
                     }

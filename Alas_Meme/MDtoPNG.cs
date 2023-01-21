@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using MarkdownDeep;
 using static Alas_Meme.ImageConverter;
@@ -16,26 +19,48 @@ namespace Alas_Meme
         {
             //Read the markdown file
             string markdown;
-            
-            string imgPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            for (int i = 0; i <= 3; i++)
+            bool runInBuildPath;
+            if (File.Exists("System.Buffers.xml"))
             {
-                imgPath = imgPath.Substring(0, imgPath.LastIndexOf('\\'));
+                runInBuildPath = true;
+                Console.WriteLine("Detected Debug mode ON");
             }
-            imgPath += "\\Lme\\";
-            
-            
-            ConvertImages(imgPath);
+            else
+            {
+                runInBuildPath = false;
+            }
 
+            if (runInBuildPath)
+            {
+                string imgPath = Assembly.GetExecutingAssembly().Location;
+                for (int i = 0; i <= 3; i++)
+                {
+                    imgPath = imgPath.Substring(0, imgPath.LastIndexOf('\\'));
+                }
+                imgPath += "\\Lme\\";
+            
+            
+                ConvertImages(imgPath);
+            }
             try
             {
                 markdown = File.ReadAllText(args[0]);
             }
             catch (IndexOutOfRangeException)
             {
-                // markdown = File.ReadAllText("../../../Alas_Meme_N_Debug.md");
-                markdown = File.ReadAllText("../../../Alas_Meme_N_Fun.md");
+                //Initialize variables
                 // markdown = File.ReadAllText("../../../Alas_Meme_N.md");
+                // markdown = File.ReadAllText("../../../Alas_Meme_N_Debug.md");
+                if (File.Exists("System.Buffers.xml"))
+                {
+                    markdown = File.ReadAllText("../../../Alas_Meme_N_Fun.md");
+                }
+                else
+                {
+                    FileSearch fileSearch = new FileSearch();
+                    markdown = File.ReadAllText(fileSearch.SearchForDefaultMd(Directory.GetCurrentDirectory()));
+                }
+
             }
 
             //Initialize the MarkdownDeep engine
@@ -48,14 +73,29 @@ namespace Alas_Meme
             html = Regex.Replace(html, @"(<img.*?)(/?>)", "$1 width=\"400\"$2");
 
             //Save the HTML to a file
-            try
+            if (runInBuildPath)
             {
-                File.WriteAllText("../../../temp/output.html", html);
+                try
+                {
+                    File.WriteAllText("../../../temp/output.html", html);
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    Directory.CreateDirectory("../../../temp");
+                    File.WriteAllText("../../../temp/output.html", html);
+                }
             }
-            catch (DirectoryNotFoundException)
+            else
             {
-                Directory.CreateDirectory("../../../temp");
-                File.WriteAllText("../../../temp/output.html", html);
+                try
+                {
+                    File.WriteAllText("./temp/output.html", html);
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    Directory.CreateDirectory("./temp");
+                    File.WriteAllText("./temp/output.html", html);
+                }
             }
             
             Console.WriteLine("Markdown converted to HTML successfully!");
@@ -79,6 +119,16 @@ namespace Alas_Meme
         static void WebBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             var browser = sender as WebBrowser;
+            bool inBuildPath;
+
+            if (File.Exists("System.Buffers.xml"))
+            {
+                inBuildPath = true;
+            }
+            else
+            {
+                inBuildPath = false;
+            }
             
             // scale browser to 200%
             browser.Document.Body.Style = "zoom: 300%;";
@@ -95,28 +145,48 @@ namespace Alas_Meme
             {
                 //sleep 10seconds
                 Console.WriteLine("Sleep 2s");
-                System.Threading.Thread.Sleep(2000);
+                Thread.Sleep(2000);
                 
                 
                 browser.DrawToBitmap(bitmap, new Rectangle(0, 0, browser.Width, browser.Height));
-                bitmap.Save("../../../temp/output.png", ImageFormat.Png);
+                if (inBuildPath)
+                {
+                    bitmap.Save("../../../temp/output.png", ImageFormat.Png);
+                }
+                else
+                {
+                    bitmap.Save("./temp/output.png", ImageFormat.Png);
+                }
                 Console.WriteLine("HTML convert to image successfully!");
                 
                 //del output.html
-                File.Delete("../../../temp/output.html");
+                if (inBuildPath)
+                {
+                    File.Delete("../../../temp/output.html");
+                }else
+                {
+                    File.Delete("./temp/output.html");
+                }
                 
                 //get running path
-                string runPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                string runPath = Assembly.GetExecutingAssembly().Location;
                 
                 //set runPath to ../../../temp/
-                for (int i = 0; i <= 3; i++)
+                if (inBuildPath)
                 {
-                    runPath = runPath.Substring(0, runPath.LastIndexOf('\\'));
+                    for (int i = 0; i <= 3; i++)
+                    {
+                        runPath = runPath.Substring(0, runPath.LastIndexOf('\\'));
+                    }
+                }
+                else
+                {
+                    runPath = Directory.GetCurrentDirectory();
                 }
                 runPath += "\\temp\\";
 
                 //open temp folder in explorer
-                System.Diagnostics.Process.Start("explorer.exe", runPath);
+                Process.Start("explorer.exe", runPath);
 
                 Application.Exit();
             }
