@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using MarkdownDeep;
+using static Alas_Meme.ImageConverter;
 
 namespace Alas_Meme
 {
@@ -15,9 +16,17 @@ namespace Alas_Meme
         {
             //Read the markdown file
             string markdown;
+            
+            string imgPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            for (int i = 0; i <= 3; i++)
             {
-                markdown = File.ReadAllText("../../../Alas_Meme_N_Fun.md");
+                imgPath = imgPath.Substring(0, imgPath.LastIndexOf('\\'));
             }
+            imgPath += "\\Lme\\";
+            
+            
+            ConvertImages(imgPath);
+
             try
             {
                 markdown = File.ReadAllText(args[0]);
@@ -85,8 +94,8 @@ namespace Alas_Meme
             using (Bitmap bitmap = new Bitmap(browser.Width, browser.Height))
             {
                 //sleep 10seconds
-                Console.WriteLine("Sleep 10s");
-                System.Threading.Thread.Sleep(5000);
+                Console.WriteLine("Sleep 2s");
+                System.Threading.Thread.Sleep(2000);
                 
                 
                 browser.DrawToBitmap(bitmap, new Rectangle(0, 0, browser.Width, browser.Height));
@@ -94,7 +103,7 @@ namespace Alas_Meme
                 Console.WriteLine("HTML convert to image successfully!");
                 
                 //del output.html
-                // File.Delete("../../../temp/output.html");
+                File.Delete("../../../temp/output.html");
                 
                 //get running path
                 string runPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
